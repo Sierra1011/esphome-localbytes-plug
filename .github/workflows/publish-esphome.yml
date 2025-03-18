@@ -51,9 +51,9 @@ jobs:
       esphome-version: ${{ steps.esphome-build.outputs.esphome-version }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4
       - name: Build binary
-        uses: esphome/build-action@v3.1.0
+        uses: esphome/build-action@v3
         id: esphome-build
         with:
           yaml_file: ${{ matrix.file }}
@@ -73,9 +73,9 @@ jobs:
     needs: build
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4
       - name: Download artifact
-        uses: actions/download-artifact@v3.0.2
+        uses: actions/download-artifact@v3
         with:
           path: output
           name: ${{ inputs.name }}
@@ -87,7 +87,7 @@ jobs:
       - run: cp -R static/* output
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.6.8
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: output
