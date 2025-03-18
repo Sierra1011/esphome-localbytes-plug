@@ -1,6 +1,6 @@
 name: Build and Publish ESPHome firmware
 
-on:
+on: # yamllint disable-line rule:truthy
   workflow_call:
     inputs:
       files:
@@ -41,16 +41,19 @@ jobs:
 
   build:
     name: Build ESPHome binary for ${{ matrix.file }}
-    needs: [prepare]
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         file: ${{ fromJson(needs.prepare.outputs.files) }}
     outputs:
       esphome-version: ${{ steps.esphome-build.outputs.esphome-version }}
     steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: esphome/build-action@v3.1.0
+      - name: Checkout code
+        uses: actions/checkout@v4.2.0
+      - name: Build binary
+        uses: esphome/build-action@v3.1.0
         id: esphome-build
         with:
           yaml_file: ${{ matrix.file }}
@@ -67,10 +70,12 @@ jobs:
   publish:
     name: Publish new firmware and website to GitHub Pages
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: build
     steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: actions/download-artifact@v3.0.2
+      - name: Checkout
+        uses: actions/checkout@v4.2.0
+      - name: Download artifact
+        uses: actions/download-artifact@v3.0.2
         with:
           path: output
           name: ${{ inputs.name }}

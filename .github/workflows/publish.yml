@@ -1,6 +1,6 @@
 name: Build and Publish ESPHome firmware and website
 
-on:
+on: # yamllint disable-line rule:truthy
   push:
 
 permissions:
