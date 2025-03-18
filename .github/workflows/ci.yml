@@ -7,7 +7,7 @@ on: # yamllint disable-line rule:truthy
 
 jobs:
   ci:
-    name: Building ${{ matrix.file }}
+    name: Build ${{ matrix.file }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
