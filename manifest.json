@@ -1,0 +1,21 @@
+{
+  "name": "Local Bytes Power Monitor Smart Plug",
+  "version": "",
+  "home_assistant_domain": "esphome",
+  "new_install_skip_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP8266",
+      "ota": {
+        "path": "localbytes-plug-pm-esp8266.ota.bin",
+        "md5": "9ac8cfb1e302602acdd43efde74fa137"
+      },
+      "parts": [
+        {
+          "path": "localbytes-plug-pm-esp8266.factory.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
