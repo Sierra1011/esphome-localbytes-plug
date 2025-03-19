@@ -53,7 +53,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Build binary
-        uses: esphome/build-action@v3
+        uses: esphome/build-action@v6
         id: esphome-build
         with:
           yaml_file: ${{ matrix.file }}
@@ -62,7 +62,7 @@ jobs:
           mkdir output
           mv "${{ steps.esphome-build.outputs.name }}" output/
           find output -type f -name '*.bin' -exec gzip "{}" \;
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}
           path: output
@@ -75,7 +75,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: output
           name: ${{ inputs.name }}
