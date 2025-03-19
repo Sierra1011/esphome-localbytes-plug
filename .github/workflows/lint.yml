@@ -1,4 +1,4 @@
-name: Build
+name: Lint
 concurrency: build-${{ github.ref }}
 
 on: # yamllint disable-line rule:truthy
