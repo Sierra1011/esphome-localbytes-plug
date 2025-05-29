@@ -1,0 +1,187 @@
+substitutions:
+  name: "bulb"
+  friendly_name: "Local Bytes RGBCT Bulb"
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  name_add_mac_suffix: true
+  project:
+    name: sierra1011.localbytes-bulb-9w-rgbct
+    version: "0.0.1"
+  on_boot:
+    priority: 600
+    then:
+      lambda: |-
+        id(red).set_max_power(id(red_max).state/100);
+        id(green).set_max_power(id(green_max).state/100);
+        id(blue).set_max_power(id(blue_max).state/100);
+        
+esp8266:
+  board: esp8285
+  restore_from_flash: true
+
+logger:
+
+ota:
+
+api:
+
+wifi:
+  output_power: 16db
+  #power_save_mode: light
+  ap:
+    ssid: "${friendly_name}"
+
+web_server:
+  port: 80
+  
+captive_portal:
+
+dashboard_import:
+  package_import_url: github://JamesSwift/localbytes-bulb-9w-rgbct/localbytes-bulb-9w-rgbct.yaml
+
+light:
+  - platform: rgbww
+    name: none
+    id: bulb
+    restore_mode: ALWAYS_ON
+    warm_white: warm_white
+    cold_white: white
+    red: red
+    green: green
+    blue: blue
+    
+    cold_white_color_temperature: 6000 K
+    warm_white_color_temperature: 3000 K
+    color_interlock: true
+    
+    
+    effects:
+      - random:
+      - strobe:
+      - pulse:
+      - flicker:
+      - strobe:
+          name: Police
+          colors:
+            - state: true
+              color_mode: RGB
+              brightness: 100%
+              red: 100%
+              green: 0%
+              blue: 0%
+              duration: 700ms
+            - state: true
+              color_mode: RGB
+              brightness: 100%
+              red: 0%
+              green: 0%
+              blue: 100%
+              duration: 700ms
+      - strobe:
+          name: Police Fast
+          colors:
+            - state: true
+              color_mode: RGB
+              brightness: 100%
+              red: 100%
+              green: 0%
+              blue: 0%
+              duration: 300ms
+            - state: true
+              color_mode: RGB
+              brightness: 100%
+              red: 0%
+              green: 0%
+              blue: 100%
+              duration: 300ms
+
+#4, 5, 12, 13, 14
+output:
+  - platform: esp8266_pwm
+    id: red
+    pin: GPIO4
+    
+  - platform: esp8266_pwm
+    id: green
+    pin: GPIO12
+    
+  - platform: esp8266_pwm
+    id: blue
+    pin: GPIO14
+    
+  - platform: esp8266_pwm
+    id: white
+    pin: GPIO5
+    
+  - platform: esp8266_pwm
+    id: warm_white
+    pin: GPIO13
+      
+number:
+  - platform: template
+    optimistic: true
+    restore_value: true
+    name: "Red Max Power"
+    id: red_max
+    icon: "mdi:lightbulb-question"
+    min_value: 0
+    max_value: 100
+    step: 1
+    unit_of_measurement: "%"
+    initial_value: 100
+    on_value:
+      lambda: |-
+        id(red).set_max_power(x/100);
+        ESP_LOGI("light", "Set red max power to: %f", id(red).get_max_power());
+        auto call = id(bulb).toggle();
+        call.perform();
+        call = id(bulb).toggle();
+        call.perform();
+
+  - platform: template
+    optimistic: true
+    restore_value: true
+    name: "Green Max Power"
+    id: green_max
+    icon: "mdi:lightbulb-question"
+    min_value: 0
+    max_value: 100
+    step: 1
+    unit_of_measurement: "%"
+    initial_value: 100
+    on_value:
+      lambda: |-
+        id(green).set_max_power(x/100);
+        ESP_LOGI("light", "Set green max power to: %f", id(green).get_max_power());
+        auto call = id(bulb).toggle();
+        call.perform();
+        call = id(bulb).toggle();
+        call.perform();
+    
+  - platform: template
+    optimistic: true
+    restore_value: true
+    name: "Blue Max Power"
+    id: blue_max
+    icon: "mdi:lightbulb-question"
+    min_value: 0
+    max_value: 100
+    step: 1
+    unit_of_measurement: "%"
+    initial_value: 100
+    on_value:
+      lambda: |-
+        id(blue).set_max_power(x/100);
+        ESP_LOGI("light", "Set blue max power to: %f", id(blue).get_max_power());
+        auto call = id(bulb).toggle();
+        call.perform();
+        call = id(bulb).toggle();
+        call.perform();
+   
+sensor:
+  # WiFi Signal Sensor
+  - platform: wifi_signal
+    name: "WiFi Status"
+    update_interval: 60s
