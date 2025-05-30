@@ -16,7 +16,7 @@ esphome:
         id(red).set_max_power(id(red_max).state/100);
         id(green).set_max_power(id(green_max).state/100);
         id(blue).set_max_power(id(blue_max).state/100);
-        
+
 esp8266:
   board: esp8285
   restore_from_flash: true
@@ -29,13 +29,13 @@ api:
 
 wifi:
   output_power: 16db
-  #power_save_mode: light
+  # power_save_mode: light
   ap:
     ssid: "${friendly_name}"
 
 web_server:
   port: 80
-  
+
 captive_portal:
 
 dashboard_import:
@@ -51,12 +51,11 @@ light:
     red: red
     green: green
     blue: blue
-    
+
     cold_white_color_temperature: 6000 K
     warm_white_color_temperature: 3000 K
     color_interlock: true
-    
-    
+
     effects:
       - random:
       - strobe:
@@ -97,28 +96,28 @@ light:
               blue: 100%
               duration: 300ms
 
-#4, 5, 12, 13, 14
+# 4, 5, 12, 13, 14
 output:
   - platform: esp8266_pwm
     id: red
     pin: GPIO4
-    
+
   - platform: esp8266_pwm
     id: green
     pin: GPIO12
-    
+
   - platform: esp8266_pwm
     id: blue
     pin: GPIO14
-    
+
   - platform: esp8266_pwm
     id: white
     pin: GPIO5
-    
+
   - platform: esp8266_pwm
     id: warm_white
     pin: GPIO13
-      
+
 number:
   - platform: template
     optimistic: true
@@ -159,7 +158,7 @@ number:
         call.perform();
         call = id(bulb).toggle();
         call.perform();
-    
+
   - platform: template
     optimistic: true
     restore_value: true
@@ -179,7 +178,7 @@ number:
         call.perform();
         call = id(bulb).toggle();
         call.perform();
-   
+
 sensor:
   # WiFi Signal Sensor
   - platform: wifi_signal
