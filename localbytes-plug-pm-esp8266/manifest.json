@@ -2,7 +2,7 @@
   "chipFamily": "ESP8266",
   "ota": {
     "path": "localbytes-plug-pm-esp8266.ota.bin",
-    "md5": "5ae7721fd68c8e71f67f2683ed274fb4"
+    "md5": "b7b94356ce748283cd9e36c4a28fc896"
   },
   "parts": [
     {
