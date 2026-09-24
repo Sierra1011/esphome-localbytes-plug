@@ -12,16 +12,6 @@ on: # yamllint disable-line rule:truthy
         required: false
         type: string
         default: ESPHome
-      clean:
-        description: Remove deleted files from the build
-        required: false
-        type: boolean
-        default: true
-      manifest_filename:
-        description: Filename of the manifest to write.
-        required: false
-        type: string
-        default: manifest.json
       esphome_version:
         description: Version of ESPHome to build for.
         required: false
@@ -52,6 +42,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Write secrets file
+        env:
+          API_ENCRYPTION_KEY: ${{ secrets.ESPHOME_API_ENCRYPTION_KEY }}
+          OTA_PASSWORD: ${{ secrets.ESPHOME_OTA_PASSWORD }}
+        run: |
+          cat > secrets.yaml <<SECRETS
+          api_encryption_key: "${API_ENCRYPTION_KEY}"
+          ota_password: "${OTA_PASSWORD}"
+          SECRETS
       - name: Build binary
         uses: esphome/build-action@5f7befc3994ab0553e1de5d6fa4c3d9fece175dc # v6.0.1
         id: esphome-build
@@ -61,34 +60,37 @@ jobs:
       - run: |
           mkdir output
           mv "${{ steps.esphome-build.outputs.name }}" output/
-          find output -type f -name '*.bin' -exec gzip "{}" \;
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ inputs.name }}
           path: output
 
   publish:
-    name: Publish new firmware and website to GitHub Pages
+    name: Publish firmware release
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Download artifact
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: output
           name: ${{ inputs.name }}
 
-      - name: Create single manifest.json
+      - name: Collect release assets
         run: |
-          jq -s '{"name": "${{ inputs.name }}", "version": "${{ needs.build.outputs.esphome-version }}", "home_assistant_domain": "esphome", "new_install_skip_erase": false, "builds":.}' output/*/manifest.json > output/${{ inputs.manifest_filename }}
+          mkdir release-assets
+          find output -type f \( -name '*.bin' -o -name '*.json' \) -exec cp {} release-assets/ \;
 
-      - run: cp -R static/* output
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
-        with:
-          branch: gh-pages
-          folder: output
-          clean: ${{ inputs.clean }}
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${{ needs.build.outputs.esphome-version }}"
+          tag="esphome-${version}-${GITHUB_SHA:0:7}"
+          gh release create "$tag" \
+            --repo "${{ github.repository }}" \
+            --title "${{ inputs.name }} (ESPHome ${version})" \
+            --generate-notes \
+            release-assets/*

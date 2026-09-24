@@ -1,7 +1,9 @@
-name: Build and Publish ESPHome firmware and website
+name: Build and Publish ESPHome firmware
 
 on: # yamllint disable-line rule:truthy
   push:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -9,6 +11,7 @@ permissions:
 jobs:
   build:
     uses: ./.github/workflows/publish-esphome.yml
+    secrets: inherit
     with:
       # CHANGEME: Set the filenames of your config files here:
       files: localbytes-plug-pm.yaml

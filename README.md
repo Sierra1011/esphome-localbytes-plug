@@ -25,6 +25,15 @@ wifi:
   password: !secret wifi_password
 ```
 
+The full firmware (`localbytes-plug-pm.yaml`) requires two additional secrets in your `secrets.yaml`, since it enables [API Encryption](https://esphome.io/components/api#configuration-variables) and an [OTA password](https://esphome.io/components/ota.html#configuration-variables) by default:
+
+```yaml
+api_encryption_key: "<32-byte base64 key>"
+ota_password: "<your chosen password>"
+```
+
+Home Assistant's ESPHome integration will prompt for these the first time it connects to a device. The same values can be reused across every plug flashed from this firmware.
+
 ## Original Credit
 
 Massive thanks to @JamesSwift who made the original here - JamesSwift/localbytes-plug-pm  
@@ -49,17 +58,17 @@ Without whom, esphome would still be an unsupported platform
 
 # Installation
 
-To flash the ESPHome firmware over tasmota, first flash the <a href="https://github.com/LocalBytes/esphome-localbytes-plug/releases/latest/download/minimal.bin">ESPHome minimal</a> firmware using the tasmota web interface (as the full firmware is too big to fit in the free space left by tasmota). Then connect to the wifi hotspot that is created and enter your network's wifi details. 
+To flash the ESPHome firmware over tasmota, first flash the ESPHome minimal firmware (`minimal.yaml`, built locally or via the ESPHome dashboard) using the tasmota web interface, as the full firmware is too big to fit in the free space left by tasmota. Then connect to the wifi hotspot that is created and enter your network's wifi details.
 
-At this point you can use the "dashboard import" feature of esphome to take ownership of the device. The next time you hit install/update via the dashboard, the full firmware will be uploaded to the plug. 
+At this point you can use the "dashboard import" feature of esphome to take ownership of the device. The next time you hit install/update via the dashboard, the full firmware will be uploaded to the plug.
 
-Alternatively, if you don't want to import the plug to your ESPHome dashboard, connect to the hotpsot the device creates and use the web UI to flash the <a href="https://github.com/LocalBytes/esphome-localbytes-plug/releases/latest/download/localbytes-plug-pm.bin">full firmware</a> from the latest release.
+Alternatively, if you don't want to import the plug to your ESPHome dashboard, connect to the hotspot the device creates and use the web UI to flash the full firmware from the <a href="https://github.com/Sierra1011/esphome-localbytes-plug/releases/latest">latest release</a> — pick the `*.factory.bin` asset for a first-time flash onto a blank or previously-erased device.
 
 # Firmware File Too Big
 
-[A minimal firmware](https://github.com/LocalBytes/esphome-localbytes-plug/releases) is provided as an intermiediary step, as there isn't always enough space on the factory smart plugs to store the new full firmware while it is being flashed.
+The full firmware doesn't always fit in the free space left on the factory smart plugs while tasmota is still installed, so a minimal firmware (`minimal.yaml`) is used as an intermediary step. It isn't currently published as part of the automated release; build it yourself via `esphome compile minimal.yaml` or the ESPHome dashboard if you need it.
 
-If you're plug is currently running Tasmota, you can try flashing the <a href="http://ota.tasmota.com/tasmota/release/tasmota-minimal.bin.gz">Tasmota minimal</a> firmware instead. After which, you can flash the <a href="https://github.com/LocalBytes/esphome-localbytes-plug/releases/latest/download/localbytes-plug-pm.bin">full firmware</a>. **Do not try flashing Tasmota Minimal unless you already have Tasmota on the device.**
+If you're plug is currently running Tasmota, you can try flashing the <a href="http://ota.tasmota.com/tasmota/release/tasmota-minimal.bin.gz">Tasmota minimal</a> firmware instead. After which, you can flash the full firmware from the <a href="https://github.com/Sierra1011/esphome-localbytes-plug/releases/latest">latest release</a>. **Do not try flashing Tasmota Minimal unless you already have Tasmota on the device.**
 
 # Calibration
 
