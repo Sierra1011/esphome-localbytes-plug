@@ -1,6 +1,9 @@
 packages:
   minimal: !include minimal.yaml
 
+ota:
+  password: !secret ota_password
+
 esphome:
   on_boot:
     priority: 300
@@ -24,6 +27,8 @@ time:
     timezone: Europe/London
 
 api:
+  encryption:
+    key: !secret api_encryption_key
   actions:
     - action: calibrate_voltage
       variables:
