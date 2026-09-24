@@ -5,7 +5,6 @@ esphome:
   on_boot:
     priority: 300
     then:
-      #Signal to the template switches that their initial values have been loaded
       - lambda: |
           if (id(voltage_multiply) <= 0) id(voltage_multiply) = 0.3;
           if (id(power_multiply) <= 0) id(power_multiply) = 0.133;
@@ -15,40 +14,43 @@ esphome:
           value: "true"
 
 wifi:
-  power_save_mode: high
+  power_save_mode: LIGHT
+
+network:
+  enable_ipv6: true
 
 time:
   - platform: homeassistant
     timezone: Europe/London
 
 api:
-  services:
-    - service: calibrate_voltage
+  actions:
+    - action: calibrate_voltage
       variables:
         actual_value: float
       then:
         - lambda: |-
-            id(voltage_multiply) = actual_value / id(voltage).raw_state;
+            id(voltage_multiply) = actual_value / id(voltage).get_raw_state();
         - number.set:
             id: voltage_factor
             value: !lambda "return id(voltage_multiply);"
 
-    - service: calibrate_power
+    - action: calibrate_power
       variables:
         actual_value: float
       then:
         - lambda: |-
-            id(power_multiply) = actual_value / id(power).raw_state;
+            id(power_multiply) = actual_value / id(power).get_raw_state();
         - number.set:
             id: power_factor
             value: !lambda "return id(power_multiply);"
 
-    - service: calibrate_current
+    - action: calibrate_current
       variables:
         actual_value: float
       then:
         - lambda: |-
-            id(current_multiply) = actual_value / id(current).raw_state;
+            id(current_multiply) = actual_value / id(current).get_raw_state();
         - number.set:
             id: current_factor
             value: !lambda "return id(current_multiply);"
@@ -74,8 +76,7 @@ globals:
     restore_value: no
     initial_value: "false"
 
-binary_sensor:
-  # Push Button (Toggles Relay When Pressed)
+binary_sensor: # Push Button (Toggles Relay When Pressed)
   - platform: gpio
     pin:
       number: GPIO3
@@ -104,8 +105,7 @@ binary_sensor:
   - platform: status
     name: "Server Status"
 
-switch:
-  # Relay (As Switch)
+switch: # Relay (As Switch)
   - platform: gpio
     name: ""
     icon: "mdi:${main_icon}"
@@ -117,9 +117,9 @@ switch:
         condition:
           switch.is_off: disable_led
         then:
-          light.turn_on: led
+          output.turn_on: state_led
     on_turn_off:
-      - light.turn_off: led
+      - output.turn_off: state_led
 
   - platform: template
     name: "Disable LED"
@@ -131,38 +131,36 @@ switch:
       - if:
           condition:
             lambda: 'return id(setupComplete) == true;'
-          then:
-            #Flash twice
-            - light.turn_off: led
+          then: #Flash twice
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
       #Final state
-      - light.turn_off: led
+      - output.turn_off: state_led
     on_turn_off:
       - if:
           condition:
             lambda: 'return id(setupComplete) == true;'
-          then:
-            #Flash twice
-            - light.turn_on: led
+          then: #Flash twice
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 1s
       #Final state
       - if:
           condition:
             switch.is_on: relay
           then:
-            light.turn_on: led
+            output.turn_on: state_led
 
   - platform: template
     name: "Disable Button"
@@ -174,19 +172,18 @@ switch:
       - if:
           condition:
             lambda: 'return id(setupComplete) == true;'
-          then:
-            #Flash thrice
-            - light.turn_off: led
+          then: #Flash thrice
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
         #Final state
       - if:
@@ -195,24 +192,23 @@ switch:
               - switch.is_off: relay
               - switch.is_on: disable_led
           then:
-            light.turn_off: led
+            output.turn_off: state_led
     on_turn_off:
       - if:
           condition:
             lambda: 'return id(setupComplete) == true;'
-          then:
-            #Flash thrice
-            - light.turn_on: led
+          then: #Flash thrice
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 0.15s
-            - light.turn_on: led
+            - output.turn_on: state_led
             - delay: 0.15s
-            - light.turn_off: led
+            - output.turn_off: state_led
             - delay: 1s
       #Final state
       - if:
@@ -220,10 +216,9 @@ switch:
             - switch.is_on: relay
             - switch.is_off: disable_led
           then:
-            light.turn_on: led
+            output.turn_on: state_led
 
-sensor:
-  # WiFi Signal Sensor
+sensor: # WiFi Signal Sensor
   - platform: wifi_signal
     name: "WiFi Status"
     update_interval: 60s
@@ -268,8 +263,7 @@ sensor:
     device_class: energy
     power_id: power
     restore: false
-    filters:
-      # Multiplication factor from W to kW is 0.001
+    filters: # Multiplication factor from W to kW is 0.001
       - multiply: 0.001
     unit_of_measurement: kWh
 
@@ -327,11 +321,6 @@ output:
     pin:
       number: GPIO13
       inverted: true
-
-light:
-  - platform: binary
-    output: state_led
-    id: led
 
 button:
   - platform: restart
