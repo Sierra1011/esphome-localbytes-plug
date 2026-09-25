@@ -59,12 +59,15 @@ jobs:
         with:
           yaml-file: ${{ matrix.file }}
           version: ${{ inputs.esphome_version }}
+      - name: Compute artifact name
+        id: artifact-name
+        run: echo "name=$(basename "${{ matrix.file }}" .yaml)" >> "$GITHUB_OUTPUT"
       - run: |
           mkdir output
           mv "${{ steps.esphome-build.outputs.name }}" output/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ${{ matrix.file }}
+          name: ${{ steps.artifact-name.outputs.name }}
           path: output
 
   publish:
