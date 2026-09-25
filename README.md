@@ -58,7 +58,7 @@ Without whom, esphome would still be an unsupported platform
 
 # Installation
 
-To flash the ESPHome firmware over tasmota, first flash the ESPHome minimal firmware (`minimal.yaml`, built locally or via the ESPHome dashboard) using the tasmota web interface, as the full firmware is too big to fit in the free space left by tasmota. Then connect to the wifi hotspot that is created and enter your network's wifi details.
+To flash the ESPHome firmware over tasmota, first flash the ESPHome minimal firmware (the `minimal.factory.bin` asset on the <a href="https://github.com/Sierra1011/esphome-localbytes-plug/releases/latest">latest release</a>) using the tasmota web interface, as the full firmware is too big to fit in the free space left by tasmota. Then connect to the wifi hotspot that is created and enter your network's wifi details.
 
 At this point you can use the "dashboard import" feature of esphome to take ownership of the device. The next time you hit install/update via the dashboard, the full firmware will be uploaded to the plug.
 
@@ -66,7 +66,7 @@ Alternatively, if you don't want to import the plug to your ESPHome dashboard, c
 
 # Firmware File Too Big
 
-The full firmware doesn't always fit in the free space left on the factory smart plugs while tasmota is still installed, so a minimal firmware (`minimal.yaml`) is used as an intermediary step. It isn't currently published as part of the automated release; build it yourself via `esphome compile minimal.yaml` or the ESPHome dashboard if you need it.
+The full firmware doesn't always fit in the free space left on the factory smart plugs while tasmota is still installed, so a minimal firmware (`minimal.yaml`, published as `minimal.factory.bin` on each release) is used as an intermediary step.
 
 If you're plug is currently running Tasmota, you can try flashing the <a href="http://ota.tasmota.com/tasmota/release/tasmota-minimal.bin.gz">Tasmota minimal</a> firmware instead. After which, you can flash the full firmware from the <a href="https://github.com/Sierra1011/esphome-localbytes-plug/releases/latest">latest release</a>. **Do not try flashing Tasmota Minimal unless you already have Tasmota on the device.**
 
