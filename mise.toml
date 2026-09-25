@@ -1,5 +1,5 @@
 [tools]
-"pipx:esphome" = "2026.9.0"
+"pipx:esphome" = "2025.7.4"
 
 [tasks.update-plug]
 description = "OTA-push the full firmware to one plug"
