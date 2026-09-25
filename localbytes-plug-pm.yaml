@@ -17,7 +17,7 @@ esphome:
           value: "true"
 
 wifi:
-  power_save_mode: LIGHT
+  power_save_mode: NONE
 
 network:
   enable_ipv6: true
