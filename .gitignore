@@ -2,6 +2,7 @@
 /secrets.yaml
 /bulb/secrets.yaml
 /plugs
+/*.bin
 
 /.idea/
 /.venv/
