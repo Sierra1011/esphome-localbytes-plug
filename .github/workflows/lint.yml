@@ -15,6 +15,7 @@ jobs:
         file:
           - localbytes-plug-pm.yaml
           - minimal.yaml
+          - bulb/localbytes-bulb.yaml
     steps:
       - name: Checkout source code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -29,6 +30,7 @@ jobs:
           api_encryption_key: "${API_ENCRYPTION_KEY}"
           ota_password: "${OTA_PASSWORD}"
           SECRETS
+          cp secrets.yaml bulb/secrets.yaml
       - name: Build ESPHome firmware to verify configuration
         uses: esphome/build-action@5f7befc3994ab0553e1de5d6fa4c3d9fece175dc # v6.0.1
         with:

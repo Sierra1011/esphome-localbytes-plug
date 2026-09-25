@@ -53,18 +53,22 @@ jobs:
           api_encryption_key: "${API_ENCRYPTION_KEY}"
           ota_password: "${OTA_PASSWORD}"
           SECRETS
+          cp secrets.yaml bulb/secrets.yaml
       - name: Build binary
         uses: esphome/build-action@5f7befc3994ab0553e1de5d6fa4c3d9fece175dc # v6.0.1
         id: esphome-build
         with:
           yaml-file: ${{ matrix.file }}
           version: ${{ inputs.esphome_version }}
+      - name: Compute artifact name
+        id: artifact-name
+        run: echo "name=$(basename "${{ matrix.file }}" .yaml)" >> "$GITHUB_OUTPUT"
       - run: |
           mkdir output
           mv "${{ steps.esphome-build.outputs.name }}" output/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ${{ matrix.file }}
+          name: ${{ steps.artifact-name.outputs.name }}
           path: output
 
   publish:
