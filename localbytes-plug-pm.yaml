@@ -4,6 +4,12 @@ packages:
 ota:
   password: !secret ota_password
 
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret ota_password
+
 esphome:
   on_boot:
     priority: 300
