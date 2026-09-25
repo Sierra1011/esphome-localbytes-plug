@@ -18,7 +18,7 @@ esphome run localbytes-plug-pm.yaml --device "$1" --no-logs
 '''
 
 [tasks.update-all-plugs]
-description = "OTA-push the full firmware to every plug in plugs.txt (or IPs given as arguments)"
+description = "OTA-push the full firmware to every plug in plugs (or IPs given as arguments)"
 run = '''
 #!/usr/bin/env bash
 set -uo pipefail
@@ -28,11 +28,11 @@ if [ ! -f secrets.yaml ]; then
 fi
 
 if [ "$#" -eq 0 ]; then
-  if [ ! -f plugs.txt ]; then
-    echo "no IPs given and plugs.txt not found -- copy plugs.example.txt to plugs.txt and fill it in, or pass IPs directly" >&2
+  if [ ! -f plugs ]; then
+    echo "no IPs given and plugs not found -- copy plugs.example to plugs and fill it in, or pass IPs directly" >&2
     exit 1
   fi
-  set -- $(grep -v '^\s*#' plugs.txt | grep -v '^\s*$')
+  set -- $(grep -v '^\s*#' plugs | grep -v '^\s*$')
 fi
 
 if [ "$#" -eq 0 ]; then

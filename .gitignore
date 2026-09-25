@@ -1,7 +1,7 @@
 /.esphome/
 /secrets.yaml
 /bulb/secrets.yaml
-/plugs.txt
+/plugs
 
 /.idea/
 /.venv/
