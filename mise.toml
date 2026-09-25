@@ -1,0 +1,58 @@
+[tools]
+"pipx:esphome" = "2026.9.0"
+
+[tasks.update-plug]
+description = "OTA-push the full firmware to one plug"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+if [ -z "${1:-}" ]; then
+  echo "usage: mise run update-plug <ip>" >&2
+  exit 1
+fi
+if [ ! -f secrets.yaml ]; then
+  echo "secrets.yaml not found -- create one with wifi_ssid, wifi_password, ota_password" >&2
+  exit 1
+fi
+esphome run localbytes-plug-pm.yaml --device "$1" --no-logs
+'''
+
+[tasks.update-all-plugs]
+description = "OTA-push the full firmware to every plug in plugs.txt (or IPs given as arguments)"
+run = '''
+#!/usr/bin/env bash
+set -uo pipefail
+if [ ! -f secrets.yaml ]; then
+  echo "secrets.yaml not found -- create one with wifi_ssid, wifi_password, ota_password" >&2
+  exit 1
+fi
+
+if [ "$#" -eq 0 ]; then
+  if [ ! -f plugs.txt ]; then
+    echo "no IPs given and plugs.txt not found -- copy plugs.example.txt to plugs.txt and fill it in, or pass IPs directly" >&2
+    exit 1
+  fi
+  set -- $(grep -v '^\s*#' plugs.txt | grep -v '^\s*$')
+fi
+
+if [ "$#" -eq 0 ]; then
+  echo "no IPs to update" >&2
+  exit 1
+fi
+
+failed=""
+for ip in "$@"; do
+  echo "=== $ip ==="
+  if esphome run localbytes-plug-pm.yaml --device "$ip" --no-logs; then
+    echo "OK: $ip"
+  else
+    echo "FAILED: $ip"
+    failed="$failed $ip"
+  fi
+done
+
+if [ -n "$failed" ]; then
+  echo "Failed:$failed" >&2
+  exit 1
+fi
+'''

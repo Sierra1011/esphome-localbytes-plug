@@ -1,0 +1,6 @@
+# List of plug IPs to update, one per line.
+# Copy this file to plugs.txt (gitignored) and fill in your own.
+# Lines starting with # and blank lines are ignored.
+10.0.0.164
+10.0.0.198
+10.0.0.137
