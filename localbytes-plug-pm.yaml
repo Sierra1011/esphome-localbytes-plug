@@ -18,6 +18,8 @@ esphome:
 
 wifi:
   power_save_mode: NONE
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
 
 network:
   enable_ipv6: true

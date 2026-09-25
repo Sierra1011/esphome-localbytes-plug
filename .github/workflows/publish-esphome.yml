@@ -48,6 +48,8 @@ jobs:
           OTA_PASSWORD: ${{ secrets.ESPHOME_OTA_PASSWORD }}
         run: |
           cat > secrets.yaml <<SECRETS
+          wifi_ssid: "placeholder"
+          wifi_password: "placeholder123"
           api_encryption_key: "${API_ENCRYPTION_KEY}"
           ota_password: "${OTA_PASSWORD}"
           SECRETS
