@@ -33,6 +33,8 @@ wifi_password: "<your network password>"
 ota_password: "<your chosen password>"
 ```
 
+The full firmware also runs a [web server](https://esphome.io/components/web_server.html) on port 80, protected by the same `ota_password` (username `admin`). Point a browser at the plug's IP to see its current state or manually upload a `.bin` file — useful if the network's OTA push protocol (`esphome run`/`upload`) isn't cooperating, since browser upload is a plain HTTP file upload with no protocol version handshake involved.
+
 The same values can be reused across every plug flashed from this firmware. The AP fallback and captive portal are still enabled, so a plug that can't join this network falls back to its own hotspot for reconfiguration.
 
 ## Original Credit
