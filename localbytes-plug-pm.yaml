@@ -27,8 +27,6 @@ time:
     timezone: Europe/London
 
 api:
-  encryption:
-    key: !secret api_encryption_key
   actions:
     - action: calibrate_voltage
       variables:

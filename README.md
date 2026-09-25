@@ -25,14 +25,13 @@ wifi:
   password: !secret wifi_password
 ```
 
-The full firmware (`localbytes-plug-pm.yaml`) requires two additional secrets in your `secrets.yaml`, since it enables [API Encryption](https://esphome.io/components/api#configuration-variables) and an [OTA password](https://esphome.io/components/ota.html#configuration-variables) by default:
+The full firmware (`localbytes-plug-pm.yaml`) requires an [OTA password](https://esphome.io/components/ota.html#configuration-variables) in your `secrets.yaml` by default:
 
 ```yaml
-api_encryption_key: "<32-byte base64 key>"
 ota_password: "<your chosen password>"
 ```
 
-Home Assistant's ESPHome integration will prompt for these the first time it connects to a device. The same values can be reused across every plug flashed from this firmware.
+The same value can be reused across every plug flashed from this firmware.
 
 ## Original Credit
 
