@@ -25,13 +25,15 @@ wifi:
   password: !secret wifi_password
 ```
 
-The full firmware (`localbytes-plug-pm.yaml`) requires an [OTA password](https://esphome.io/components/ota.html#configuration-variables) in your `secrets.yaml` by default:
+The full firmware (`localbytes-plug-pm.yaml`) requires your Wi-Fi credentials and an [OTA password](https://esphome.io/components/ota.html#configuration-variables) in your `secrets.yaml` by default:
 
 ```yaml
+wifi_ssid: "<your network name>"
+wifi_password: "<your network password>"
 ota_password: "<your chosen password>"
 ```
 
-The same value can be reused across every plug flashed from this firmware.
+The same values can be reused across every plug flashed from this firmware. The AP fallback and captive portal are still enabled, so a plug that can't join this network falls back to its own hotspot for reconfiguration.
 
 ## Original Credit
 
