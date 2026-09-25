@@ -14,6 +14,6 @@ jobs:
     secrets: inherit
     with:
       # CHANGEME: Set the filenames of your config files here:
-      files: localbytes-plug-pm.yaml
+      files: localbytes-plug-pm.yaml,minimal.yaml
       # CHANGEME: Set the name of your project here:
       name: Local Bytes Power Monitor Smart Plug
