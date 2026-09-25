@@ -62,7 +62,7 @@ jobs:
           mv "${{ steps.esphome-build.outputs.name }}" output/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ${{ inputs.name }}
+          name: ${{ matrix.file }}
           path: output
 
   publish:
@@ -72,16 +72,21 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Download artifact
+      - name: Download artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: output
-          name: ${{ inputs.name }}
 
       - name: Collect release assets
         run: |
           mkdir release-assets
-          find output -type f \( -name '*.bin' -o -name '*.json' \) -exec cp {} release-assets/ \;
+          for dir in output/*/; do
+            config=$(basename "$dir")
+            base=${config%.yaml}
+            find "$dir" -name '*.factory.bin' -exec cp {} "release-assets/${base}.factory.bin" \;
+            find "$dir" -name '*.ota.bin' -exec cp {} "release-assets/${base}.ota.bin" \;
+            find "$dir" -name 'manifest.json' -exec cp {} "release-assets/${base}-manifest.json" \;
+          done
 
       - name: Create release
         env:
