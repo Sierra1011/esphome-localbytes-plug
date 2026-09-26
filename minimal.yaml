@@ -18,7 +18,10 @@ esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
 
-  min_version: 2026.9.0
+  # Pinned to 2025.7.4: newer esphome versions broke the Home Assistant API
+  # connection on these devices in ways power_save_mode: NONE didn't fix.
+  # Revisit once the upstream regression is identified and fixed.
+  min_version: 2025.7.4
   name_add_mac_suffix: true
 
   project:
@@ -30,7 +33,9 @@ esp8266:
   restore_from_flash: true
   early_pin_init: false
 
-factory_reset:
+# factory_reset as a standalone component (auto-reset after repeated boot
+# failures) isn't supported on the pinned esphome version -- only available
+# as a button platform, which the full firmware already provides separately.
 
 logger:
 
@@ -46,6 +51,6 @@ dashboard_import:
 wifi:
   ap:
     ssid: "${friendly_name}"
-  min_auth_mode: WPA
+  # min_auth_mode isn't supported on the pinned esphome version.
 
 captive_portal:
