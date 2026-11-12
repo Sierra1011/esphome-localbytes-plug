@@ -73,6 +73,8 @@ The full firmware doesn't always fit in the free space left on the factory smart
 
 If you're plug is currently running Tasmota, you can try flashing the <a href="http://ota.tasmota.com/tasmota/release/tasmota-minimal.bin.gz">Tasmota minimal</a> firmware instead. After which, you can flash the full firmware from the <a href="https://github.com/Sierra1011/esphome-localbytes-plug/releases/latest">latest release</a>. **Do not try flashing Tasmota Minimal unless you already have Tasmota on the device.**
 
+The bulb (`bulb/localbytes-bulb.yaml`) hits the same problem on Tasmota, so it has its own bridge firmware, `bulb/localbytes-bulb-minimal.yaml`, published as `localbytes-bulb-minimal.factory.bin`. Flash that first, then OTA-push the full bulb config once it's networked.
+
 # Calibration
 
 Once you have flashed the new firmware onto your smart plug and connected it to home assistant, you may wish to calibrate your plug to improve it's accuracy. To calibrate your plug, you need another "known-good" smart plug or a calibration device.
